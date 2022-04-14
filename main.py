@@ -53,6 +53,8 @@ class GUI:
         game(name)
 
 def game(name:str)->None:
+    time_start = time()
+    counter = 0
     car = path('car.gif')
     tiles = list(range(32)) * 2
     state = {'mark': None}
@@ -80,11 +82,23 @@ def game(name:str)->None:
 
 
     def tap(x, y):
+        nonlocal counter
         spot = index(x, y)
         mark = state['mark']
         if mark is None or mark == spot or tiles[mark] != tiles[spot]:
             state['mark'] = spot
+        elif counter == 31:
+            hide[spot] = False
+            hide[mark] = False
+            state['mark'] = None
+            time_end = time()
+            with open("Records.txt",'a') as file:
+                file.write(f"{name} ends game at {time_end-time_start}")
+            print("END")
+
         else:
+            #Right click
+            counter += 1
             hide[spot] = False
             hide[mark] = False
             state['mark'] = None
